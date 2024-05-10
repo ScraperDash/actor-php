@@ -1,0 +1,27 @@
+name: CI Workflow
+
+on: [push]
+
+jobs:
+    checks:
+        name: Quality Checks
+        runs-on: ubuntu-latest
+        services:
+            docker:
+                image: docker:dind
+                options: --privileged
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v3
+            - name: Docker Compose Up
+              run: docker compose up -d
+            - name: Composer Install
+              run: docker compose exec php composer install
+            - name: Static Analysis
+              run: docker compose exec php task static-analysis
+            - name: Coding Standards Checks
+              run: docker compose exec php task cs-checks
+            - name: Security Checks
+              run: docker compose exec php task security-checks
+            - name: Execute Tests
+              run: docker compose exec php task tests

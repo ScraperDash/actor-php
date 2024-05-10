@@ -1,0 +1,59 @@
+# https://taskfile.dev
+
+version: '3'
+
+vars:
+    SECURITY_CHECKER_RELEASE: https://github.com/fabpot/local-php-security-checker/releases/download/v2.0.6/local-php-security-checker_2.0.6_linux_amd64
+
+tasks:
+    up:
+        cmds:
+            - docker compose up -d
+        silent: true
+
+    ash:
+        cmds:
+            - docker compose exec --user localdevuser php /bin/ash
+        silent: true
+
+    ash-root:
+        cmds:
+            - docker compose exec php /bin/ash
+        silent: true
+
+    checks:
+        deps:
+            - static-analysis
+            - cs-fix
+            - cs-checks
+            - security-checks
+            - tests
+
+    static-analysis:
+        cmds:
+            - "./vendor/bin/phpstan analyze"
+        silent: true
+
+    cs-fix:
+        cmds:
+            - "./vendor/bin/ecs check --fix"
+        silent: true
+
+    cs-checks:
+        cmds:
+            - "./vendor/bin/ecs check"
+        silent: true
+
+    security-checks:
+        cmds:
+            - "wget -O /tmp/local-php-security-checker {{.SECURITY_CHECKER_RELEASE}}"
+            - "chmod +x /tmp/local-php-security-checker"
+            - "/tmp/local-php-security-checker"
+        generates:
+            - /tmp/local-php-security-checker
+
+    tests:
+        cmds:
+            - ./vendor/bin/pest --parallel --display-warnings
+            - ./vendor/bin/pest --type-coverage --min=100
+        silent: true

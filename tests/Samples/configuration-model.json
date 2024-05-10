@@ -1,0 +1,108 @@
+{
+    "version": "latest",
+    "request": {
+        "profile": "none"
+    },
+    "extractions": [
+        {
+            "name": "startedButton",
+            "type": "html_css_selector",
+            "config": {
+                "selector": "a[href=\"/docs/installation\"]"
+            },
+            "cleaners": [
+                {
+                    "type": "string_trim"
+                }
+            ],
+            "validators": [
+                {
+                    "type": "not_empty"
+                }
+            ]
+        },
+        {
+            "name": "testimonials",
+            "type": "html_collection_css_selector",
+            "config": {
+                "selector": "#app section:nth-child(3) blockquote",
+                "extractions": [
+                    {
+                        "name": "comment",
+                        "type": "html_css_selector",
+                        "config": {
+                            "selector": "p"
+                        },
+                        "cleaners": [
+                            {
+                                "type": "string_trim"
+                            }
+                        ],
+                        "validators": [
+                            {
+                                "type": "not_empty"
+                            }
+                        ]
+                    },
+                    {
+                        "name": "author",
+                        "type": "html_css_selector",
+                        "config": {
+                            "selector": "footer"
+                        },
+                        "cleaners": [
+                            {
+                                "type": "string_trim"
+                            }
+                        ],
+                        "validators": [
+                            {
+                                "type": "not_empty"
+                            }
+                        ]
+                    },
+                    {
+                        "name": "link",
+                        "type": "html_css_selector",
+                        "config": {
+                            "selector": "a",
+                            "focus": "attribute_value",
+                            "attribute": "href"
+                        },
+                        "cleaners": [
+                            {
+                                "type": "string_trim"
+                            }
+                        ],
+                        "validators": [
+                            {
+                                "type": "not_empty"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "name": "copyright",
+            "type": "html_css_selector",
+            "config": {
+                "selector": "main > footer"
+            },
+            "cleaners": [
+                {
+                    "type": "string_trim"
+                }
+            ],
+            "validators": [
+                {
+                    "type": "not_empty"
+                }
+            ]
+        }
+    ],
+    "output": {
+        "type": "model",
+        "model": "Tests\\Samples\\ActorTestModel"
+    }
+}

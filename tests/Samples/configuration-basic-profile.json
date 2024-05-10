@@ -1,0 +1,28 @@
+{
+    "version": "latest",
+    "request": {
+        "profile": "basic"
+    },
+    "extractions": [
+        {
+            "name": "startedButton",
+            "type": "html_css_selector",
+            "config": {
+                "selector": "a[href=\"/docs/installation\"]"
+            },
+            "cleaners": [
+                {
+                    "type": "string_trim"
+                }
+            ],
+            "validators": [
+                {
+                    "type": "not_empty"
+                }
+            ]
+        }
+    ],
+    "output": {
+        "type": "map"
+    }
+}

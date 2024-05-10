@@ -1,0 +1,58 @@
+{
+    "name": "scraperdash/actor-php",
+    "description": "PHP Implementation of a ScraperDash Actor",
+    "type": "library",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "ScraperDash\\Actor\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "tests/"
+        }
+    },
+    "require": {
+        "ext-bcmath": "*",
+        "ext-dom": "*",
+        "ext-intl": "*",
+        "ext-json": "*",
+        "ext-xml": "*",
+        "beberlei/assert": "^3.3",
+        "azjezz/psl": "^2.7",
+        "symfony/serializer": "^7.0",
+        "symfony/property-access": "^7.0",
+        "psr/http-client": "^1.0",
+        "psr/http-message": "^2.0",
+        "symfony/css-selector": "^7.0",
+        "psr/http-factory": "^1.0",
+        "respect/validation": "^2.2",
+        "psr/container": "^2.0"
+    },
+    "require-dev": {
+        "phpstan/phpstan": "^1.10",
+        "php-standard-library/phpstan-extension": "^1.0",
+        "phpstan/phpstan-beberlei-assert": "^1.1",
+        "phpstan/phpstan-deprecation-rules": "^1.1",
+        "phpstan/phpstan-strict-rules": "^1.5",
+        "symplify/easy-coding-standard": "^12.0",
+        "thecodingmachine/phpstan-safe-rule": "^1.2",
+        "thecodingmachine/phpstan-strict-rules": "^1.0",
+        "pestphp/pest": "^2.18",
+        "pestphp/pest-plugin-type-coverage": "^2.2",
+        "mockery/mockery": "^1.6",
+        "symfony/http-client": "^7.0",
+        "phpstan/phpstan-mockery": "^1.1",
+        "nyholm/psr7": "^1.8"
+    },
+    "suggest": {
+        "symfony/http-client": "Used for the 'basic' client configuration.",
+        "nyholm/psr7": "Required if you want to use the 'basic' client configuration."
+    },
+    "config": {
+        "allow-plugins": {
+            "pestphp/pest-plugin": true
+        }
+    }
+}

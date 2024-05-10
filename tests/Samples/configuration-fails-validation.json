@@ -1,0 +1,63 @@
+{
+    "version": "latest",
+    "request": {
+        "profile": "none"
+    },
+    "extractions": [
+        {
+            "name": "category",
+            "type": "html_css_selector",
+            "config": {
+                "selector": "#productCategory"
+            },
+            "validators": [
+                {
+                    "type": "not_empty"
+                }
+            ]
+        },
+        {
+            "name": "testimonials",
+            "type": "html_collection_css_selector",
+            "config": {
+                "selector": "#app section:nth-child(3) blockquote",
+                "extractions": [
+                    {
+                        "name": "name",
+                        "type": "html_css_selector",
+                        "config": {
+                            "selector": ".product"
+                        },
+                        "validators": [
+                            {
+                                "type": "not_empty"
+                            }
+                        ]
+                    },
+                    {
+                        "name": "author",
+                        "type": "html_css_selector",
+                        "config": {
+                            "selector": "footer"
+                        },
+                        "validators": [
+                            {
+                                "type": "not_empty"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "name": "copyright",
+            "type": "html_css_selector",
+            "config": {
+                "selector": "main > footer"
+            }
+        }
+    ],
+    "output": {
+        "type": "map"
+    }
+}
