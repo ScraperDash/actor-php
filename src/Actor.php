@@ -7,6 +7,7 @@ namespace ScraperDash\Actor;
 use Assert\Assertion;
 use Nyholm\Psr7\Request;
 use Psr\Http\Client\ClientInterface;
+use Psr\Http\Message\StreamInterface;
 use ScraperDash\Actor\Cleaner\CleanerRepository;
 use ScraperDash\Actor\Configuration\Model\Configuration;
 use ScraperDash\Actor\Configuration\Model\Enum\OutputTypeEnum;
@@ -42,11 +43,17 @@ class Actor
     }
 
     /**
+     * @param array<string, mixed> $headers
      * @return object|array<string, mixed>
      */
-    public function act(string $method, string $url): object|array
-    {
-        $request = new Request($method, $url);
+    public function act(
+        string $method,
+        string $url,
+        array $headers = [],
+        StreamInterface|string|null $body = null,
+        string $version = '1.1',
+    ): object|array {
+        $request = new Request($method, $url, $headers, $body, $version);
         $profile = $this->profileRepository->getProfile($this->configuration->getRequest()->getProfile());
         if ($profile !== null) {
             foreach ($profile->getHeaders() as $header => $value) {

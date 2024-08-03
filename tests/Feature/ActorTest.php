@@ -142,6 +142,55 @@ describe(Actor::class, function () {
             ->and($result['startedButton'])->toBeString()->toEqual('Get started');
     });
 
+    it('Passes request configuration through to underlying client', function () {
+        $client = Mockery::mock(ClientInterface::class);
+        $response = Mockery::mock(ResponseInterface::class);
+        $responseStream = Mockery::mock(StreamInterface::class);
+        $responseStream->shouldReceive('getContents')->andReturn(getSample('pest.html'));
+        $response->shouldReceive('getBody')->andReturn($responseStream);
+
+        $requestBody = '{"message": "This is a test body"}';
+        $requestHeaders = [
+            'Authorization' => 'not-real-auth',
+            'X-FAKE-HEADER' => 'fake-value',
+        ];
+        $requestVersion = '2';
+        $client->shouldReceive('sendRequest')->withArgs(function (RequestInterface $request) use (
+            $requestBody,
+            $requestHeaders,
+            $requestVersion
+        ): bool {
+            $request->getBody()->rewind();
+            if ($request->getBody()->getContents() !== $requestBody) {
+                return false;
+            }
+
+            // Make sure the Profile headers are also included
+            $basicProfile = new BasicProfile();
+            foreach ($basicProfile->getHeaders() as $header => $value) {
+                if ($request->getHeaderLine($header) !== $value) {
+                    return false;
+                }
+            }
+
+            foreach ($requestHeaders as $header => $value) {
+                if ($request->getHeaderLine($header) !== $value) {
+                    return false;
+                }
+            }
+
+            return $request->getProtocolVersion() === $requestVersion;
+        })->andReturn($response);
+
+        $configuration = (new ConfigurationFactory())->create(getSample('configuration-basic-profile.json'));
+
+        $actor = new Actor($configuration, $client);
+        $result = $actor->act('GET', 'https://pestphp.com', $requestHeaders, $requestBody, $requestVersion);
+
+        expect($result)->toBeArray()
+            ->and($result['startedButton'])->toBeString()->toEqual('Get started');
+    });
+
     it('Throws an exception when there are validation issues', function () {
         $client = Mockery::mock(ClientInterface::class);
         $response = Mockery::mock(ResponseInterface::class);
